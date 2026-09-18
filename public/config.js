@@ -1,6 +1,6 @@
 window.LAGETRAINING_ADMIN_CONFIG = {
   portalUrl: "https://www.arcgis.com",
-  oauthAppId: "HIER_OAUTH_APP_ID_EINTRAGEN",
+  oauthAppId: "0sjHE1H45PUtL5k3",
   featureServiceUrl: "https://services-eu1.arcgis.com/XfUqDXJfAezaKUnU/arcgis/rest/services/Lagetraining_Daten_Trainer/FeatureServer",
 
   layers: {
