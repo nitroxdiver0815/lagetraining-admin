@@ -25,6 +25,6 @@ window.LAGETRAINING_ADMIN_CONFIG = {
     location: ["location_name", "location_code"]
   },
 
-  // Muss dem gespeicherten Domain-Code entsprechen.
-  fireStationTypeCode: "FEUERWACHE"
+  // Domain location_type: FIRE_STATION = Feuerwache
+  fireStationTypeCode: "FIRE_STATION"
 };
