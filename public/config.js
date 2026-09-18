@@ -20,5 +20,5 @@ window.LAGETRAINING_ADMIN_CONFIG = {
     location: ["location_name", "location_code"]
   },
 
-  fireStationTypeCode: "FEUERWACHE"
+  fireStationTypeCode: "FIRE_STATION"
 };
