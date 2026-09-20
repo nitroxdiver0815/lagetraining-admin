@@ -109,7 +109,7 @@
     return values.join(" · ") || "Unbenannter Datensatz";
   }
 
-  async function queryLayer(layerId, where = "1=1", serviceUrl) {
+  async function queryLayer(layerId, where = "1=1", serviceUrl, outFields = "*") {
     const features = [];
     const pageSize = 2000;
     let resultOffset = 0;
@@ -124,7 +124,7 @@
             f: "json",
             token: credential.token,
             where,
-            outFields: "*",
+            outFields,
             returnGeometry: false,
             orderByFields: "OBJECTID",
             resultOffset,
@@ -575,7 +575,10 @@
 
     const records = await queryLayer(
       config.layers.scenarioDispatch,
-      `scenario_id = ${guidSql(scenarioId)}`
+      `scenario_id = ${guidSql(scenarioId)}`,
+      undefined,
+      "OBJECTID,scenario_id,talkgroup_name,talkgroup_short_dial," +
+        "incident_information,dispatch_free_text,incident_type,initial_abek_id"
     );
     dispatchRecord = records[0] || null;
 
