@@ -44,7 +44,11 @@
   }
 
   function arcgisGuid(value) {
-    return `{${normalizeGuid(value)}}`;
+    const normalized = normalizeGuid(value);
+    if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(normalized)) {
+      throw new Error(`Ungültige GUID: ${value || "(leer)"}`);
+    }
+    return `{${normalized.toUpperCase()}}`;
   }
 
   function sqlLiteral(value) {
@@ -556,7 +560,7 @@
     setStatus("Alarmierungsdaten werden gespeichert …");
 
     const attributes = {
-      scenario_id: scenarioId,
+      scenario_id: arcgisGuid(scenarioId),
       initial_abek_id: arcgisGuid(abekId),
       incident_type: incidentType,
       talkgroup_name: talkgroupName,
