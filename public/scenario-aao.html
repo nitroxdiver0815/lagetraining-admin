@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="de" data-tool="dispatch">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Szenario – AAO</title>
+  <link rel="stylesheet" href="https://js.arcgis.com/4.33/esri/themes/light/main.css">
+  <link rel="stylesheet" href="scenario-tools.css">
+  <script src="https://js.arcgis.com/4.33/"></script>
+  <script src="config.js"></script>
+  <script defer src="scenario-tools.js"></script>
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <div><p class="eyebrow">Szenarioverwaltung</p><h1>Alarmierung und AAO</h1></div>
+      <button id="signInButton" class="secondary" type="button">Bei ArcGIS anmelden</button>
+    </header>
+
+    <section class="card">
+      <label>Szenario
+        <select id="scenarioSelect" disabled><option>Bitte anmelden</option></select>
+      </label>
+    </section>
+
+    <section class="card">
+      <h2>Alarmierungsdaten</h2>
+      <div class="form-grid">
+        <label class="wide">ABEK-Einsatzstichwort
+          <select id="abekSelect" disabled></select>
+        </label>
+        <label>Einsatzart
+          <input id="incidentType" type="text" maxlength="100" required>
+        </label>
+        <label>Sprechgruppe
+          <input id="talkgroupName" type="text" maxlength="50" required>
+        </label>
+        <label>Kurzwahl
+          <input id="talkgroupShortDial" type="text" maxlength="20">
+        </label>
+        <label class="wide">Einsatzinformation
+          <textarea id="incidentInformation" maxlength="2000"></textarea>
+        </label>
+        <label class="wide">Freitext der Alarmierung
+          <textarea id="dispatchFreeText" maxlength="2000"></textarea>
+        </label>
+      </div>
+      <div class="actions"><button id="saveButton" disabled>Alarmierungsdaten speichern</button></div>
+      <p id="status" class="status" role="status"></p>
+    </section>
+  </main>
+</body>
+</html>
