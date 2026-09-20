@@ -3,6 +3,7 @@ window.LAGETRAINING_ADMIN_CONFIG = {
   oauthAppId: "0sjHE1H45PUtL5k3",
   featureServiceUrl: "https://services-eu1.arcgis.com/XfUqDXJfAezaKUnU/arcgis/rest/services/Lagetraining_Daten_Trainer/FeatureServer",
   abekServiceUrl: "https://services-eu1.arcgis.com/XfUqDXJfAezaKUnU/arcgis/rest/services/abek_catalog/FeatureServer",
+  talkgroupServiceUrl: "https://services-eu1.arcgis.com/XfUqDXJfAezaKUnU/arcgis/rest/services/radio_talkgroups/FeatureServer",
 
   layers: {
     locations: 0,
@@ -11,7 +12,8 @@ window.LAGETRAINING_ADMIN_CONFIG = {
     scenarioLocations: 12,
     scenarioVehicles: 13,
     scenarioDispatch: 16,
-    abekCatalog: 0
+    abekCatalog: 0,
+    talkgroups: 0
   },
 
   fields: {
