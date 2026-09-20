@@ -164,6 +164,26 @@
     return response.data;
   }
 
+  async function loadCodedValueSelect(select, layerId, fieldName, emptyLabel) {
+    const response = await arcgisRequest(serviceLayerUrl(layerId), {
+      query: {
+        f: "json",
+        token: credential.token
+      },
+      responseType: "json"
+    });
+    const field = (response.data.fields || []).find(
+      (item) => item.name.toLowerCase() === fieldName.toLowerCase()
+    );
+    const codedValues = field?.domain?.codedValues || [];
+    if (!codedValues.length) {
+      throw new Error(`Für ${fieldName} wurde keine codierte Domain gefunden.`);
+    }
+    select.replaceChildren(new Option(emptyLabel, ""));
+    codedValues.forEach((item) => select.add(new Option(item.name, item.code)));
+    select.disabled = false;
+  }
+
   function fillSelect(select, records, valueField, labelFactory, emptyLabel) {
     select.replaceChildren(new Option(emptyLabel, ""));
     records
@@ -541,11 +561,19 @@
   }
 
   async function initializeDispatchTool() {
-    abekRecords = await queryLayer(
-      config.layers.abekCatalog,
-      "is_active = 1",
-      config.abekServiceUrl
-    );
+    [abekRecords] = await Promise.all([
+      queryLayer(
+        config.layers.abekCatalog,
+        "is_active = 1",
+        config.abekServiceUrl
+      ),
+      loadCodedValueSelect(
+        byId("incidentType"),
+        config.layers.scenarioDispatch,
+        "incident_type",
+        "Einsatzart auswählen"
+      )
+    ]);
 
     fillSelect(
       byId("abekSelect"),
