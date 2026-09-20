@@ -432,8 +432,19 @@
     );
 
     byId("vehicleSelect").addEventListener("change", preselectHomeLocation);
-    scenarioSelect.addEventListener("change", loadVehicleAssignments);
+    scenarioSelect.addEventListener("change", handleVehicleScenarioChange);
     saveButton.addEventListener("click", saveVehicleAssignment);
+    await loadVehicleAssignments();
+  }
+
+  async function handleVehicleScenarioChange() {
+    byId("vehicleSelect").value = "";
+    byId("startLocationSelect").value = "";
+    byId("crewConfiguration").value = "";
+    byId("dispatchOrder").value = "";
+    byId("vehiclePrimary").value = "0";
+    byId("vehicleNotes").value = "";
+    setStatus("");
     await loadVehicleAssignments();
   }
 
