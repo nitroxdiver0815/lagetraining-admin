@@ -80,6 +80,7 @@ Die Datei `public/config.js` enthält:
 - OAuth-App-ID
 - Trainer-Feature-Service
 - ABEK-Feature-Service
+- Sprechgruppen-Feature-Service
 - Layer-IDs und Feldnamen
 
 ## Sicherheit
