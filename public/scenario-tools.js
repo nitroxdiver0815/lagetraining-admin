@@ -51,6 +51,17 @@
     return normalized;
   }
 
+  function editErrorMessage(prefix, error, attributes) {
+    const serverMessage = [
+      error?.description,
+      error?.message,
+      ...(Array.isArray(error?.details) ? error.details : [])
+    ].filter(Boolean).join(" | ") || "Unbekannter ArcGIS-Fehler";
+    return `${prefix}: ${serverMessage} ` +
+      `(scenario_id=${attributes.scenario_id}, ` +
+      `initial_abek_id=${attributes.initial_abek_id})`;
+  }
+
   function sqlLiteral(value) {
     if (typeof value === "number") return String(value);
     return `'${String(value).replace(/'/g, "''")}'`;
@@ -577,18 +588,22 @@
         updates: JSON.stringify([{ attributes }])
       });
       if (!result.updateResults?.[0]?.success) {
-        throw new Error(
-          result.updateResults?.[0]?.error?.description || "Aktualisieren fehlgeschlagen."
-        );
+        throw new Error(editErrorMessage(
+          "Aktualisieren fehlgeschlagen",
+          result.updateResults?.[0]?.error,
+          attributes
+        ));
       }
     } else {
       result = await applyEdits(config.layers.scenarioDispatch, {
         adds: JSON.stringify([{ attributes }])
       });
       if (!result.addResults?.[0]?.success) {
-        throw new Error(
-          result.addResults?.[0]?.error?.description || "Anlegen fehlgeschlagen."
-        );
+        throw new Error(editErrorMessage(
+          "Anlegen fehlgeschlagen",
+          result.addResults?.[0]?.error,
+          attributes
+        ));
       }
     }
 
