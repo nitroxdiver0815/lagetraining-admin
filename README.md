@@ -1,38 +1,86 @@
 # Lagetraining Admin
 
-Kleines, in ArcGIS Experience Builder einbettbares Verwaltungsmodul für relationale Zuordnungen im virtuellen Lagetraining.
+In ArcGIS Experience Builder einbettbares Verwaltungsmodul für relationale Zuordnungen im virtuellen Lagetraining.
 
-## Erste Funktion
+## Stammdatenfunktion
 
-**Fahrzeug → Heimatwache**
+### Fahrzeug → Heimatwache
+
+Startseite:
+
+```text
+/
+```
 
 - Fahrzeuge aus `vehicles` laden
-- Orte aus `locations` auf Feuerwachen filtern
+- Feuerwachen aus `locations` laden
 - `locations.GlobalID` in `vehicles.home_location_id` speichern
-- Änderungen mit den Rechten des angemeldeten ArcGIS-Benutzers ausführen
 
-## Einrichtung
+## Szenarioverwaltung
 
-1. Abhängigkeiten installieren:
+Die Werkzeuge besitzen getrennte URLs und können einzeln in die Ansichten eines Abschnitts-Widgets eingebettet werden.
 
-   ```bash
-   npm install
-   ```
+| Ansicht | URL |
+|---|---|
+| Orte | `/scenario-orte.html` |
+| AAO / Alarmierung | `/scenario-aao.html` |
+| Fahrzeuge | `/scenario-fahrzeuge.html` |
 
-2. `public/config.example.js` nach `public/config.js` kopieren.
-3. In `public/config.js` eintragen:
-   - ArcGIS-Portal-URL
-   - OAuth-App-ID
-   - REST-URL des `vehicles`-Layers
-   - REST-URL des `locations`-Layers
-   - tatsächliche Feldnamen
-4. Anwendung starten:
+Optional kann ein Szenario übergeben werden:
 
-   ```bash
-   npm start
-   ```
+```text
+/scenario-orte.html?scenario_id=<GlobalID>
+/scenario-aao.html?scenario_id=<GlobalID>
+/scenario-fahrzeuge.html?scenario_id=<GlobalID>
+```
 
-5. Cloudflare auf Port 3002 weiterleiten und die öffentliche URL als OAuth-Redirect-URI registrieren.
+Ohne URL-Parameter wird das Szenario innerhalb des jeweiligen Werkzeugs ausgewählt.
+
+### Orte
+
+Schreibt und löscht Zuordnungen in `scenario_locations`:
+
+- Szenario
+- vorhandener Ort
+- Rolle
+- Reihenfolge
+- primärer Ort
+- Hinweise
+
+### AAO / Alarmierung
+
+Erstellt oder aktualisiert den Datensatz in `scenario_dispatch` und verbindet ihn über `initial_abek_id` mit dem separaten `abek_catalog`.
+
+### Fahrzeuge
+
+Schreibt und löscht Zuordnungen in `scenario_vehicles`:
+
+- Szenario
+- vorhandenes Fahrzeug
+- Startwache
+- Besatzung
+- Alarmierungsreihenfolge
+- primäres Fahrzeug
+- Hinweise
+
+## Lokale Einrichtung
+
+```bash
+npm install
+npm start
+```
+
+Anschließend: `http://localhost:3002`
+
+## Konfiguration
+
+Die Datei `public/config.js` enthält:
+
+- ArcGIS-Portal-URL
+- OAuth-App-ID
+- Trainer-Feature-Service
+- ABEK-Feature-Service
+- Layer-IDs und Feldnamen
 
 ## Sicherheit
 
@@ -40,4 +88,4 @@ Die Anwendung enthält keine ArcGIS-Zugangsdaten. Sie verwendet ArcGIS OAuth und
 
 ## Einbettung
 
-Die Anwendung ist für eine Einbettung in Experience Builder vorgesehen. Der Server erlaubt Frames von `experience.arcgis.com` und `*.arcgis.com`.
+Der Server erlaubt Frames von `experience.arcgis.com` und `*.arcgis.com`. Für den Betrieb in Experience Builder ist eine öffentlich erreichbare HTTPS-Adresse erforderlich.
