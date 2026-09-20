@@ -51,6 +51,10 @@ Schreibt und löscht Zuordnungen in `scenario_locations`:
 
 Erstellt oder aktualisiert den Datensatz in `scenario_dispatch` und verbindet ihn über `initial_abek_id` mit der `GlobalID` des Datensatzes im separaten `abek_catalog`. In der Auswahlliste erscheinen nur Datensätze mit `is_active = 1`.
 
+Die Sprechgruppen werden aus der eigenständigen Tabelle `radio_talkgroups` (Tabellen-ID 0) geladen. Angezeigt werden `talkgroup_name` und optional `display_name`; nach der Auswahl wird `short_dial` automatisch übernommen. Es werden nur Datensätze mit `is_active = 1` geladen und nach `display_order` sortiert.
+
+Als eindeutige technische Kennung genügt die von ArcGIS automatisch gepflegte `GlobalID`. Ein zusätzliches Feld `talkgroup_id` wird von der Anwendung nicht verwendet und ist nicht erforderlich. In `scenario_dispatch` werden derzeit `talkgroup_name` und `talkgroup_short_dial` gespeichert.
+
 ### Fahrzeuge
 
 Schreibt und löscht Zuordnungen in `scenario_vehicles`:
