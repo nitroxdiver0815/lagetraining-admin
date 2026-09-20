@@ -489,7 +489,7 @@
     fillSelect(
       byId("abekSelect"),
       abekRecords,
-      "abek_id",
+      "GlobalID",
       abekLabel,
       "ABEK-Einsatzstichwort auswählen"
     );
@@ -523,9 +523,9 @@
     }
 
     const attributes = dispatchRecord.attributes;
-    const abekFeature = featureByGuid(abekRecords, "abek_id", attributes.initial_abek_id);
+    const abekFeature = featureByGuid(abekRecords, "GlobalID", attributes.initial_abek_id);
 
-    byId("abekSelect").value = abekFeature?.attributes.abek_id || "";
+    byId("abekSelect").value = abekFeature?.attributes.GlobalID || "";
     byId("incidentType").value = attributes.incident_type || "";
     byId("talkgroupName").value = attributes.talkgroup_name || "";
     byId("talkgroupShortDial").value = attributes.talkgroup_short_dial || "";
