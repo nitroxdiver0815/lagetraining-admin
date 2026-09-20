@@ -282,8 +282,18 @@
       "Ort auswählen"
     );
 
-    scenarioSelect.addEventListener("change", loadLocationAssignments);
+    scenarioSelect.addEventListener("change", handleLocationScenarioChange);
     saveButton.addEventListener("click", saveLocationAssignment);
+    await loadLocationAssignments();
+  }
+
+  async function handleLocationScenarioChange() {
+    byId("locationSelect").value = "";
+    byId("locationRole").selectedIndex = 0;
+    byId("displayOrder").value = "";
+    byId("locationPrimary").value = "0";
+    byId("locationNotes").value = "";
+    setStatus("");
     await loadLocationAssignments();
   }
 
