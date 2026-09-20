@@ -17,6 +17,7 @@
   let locations = [];
   let vehicles = [];
   let abekRecords = [];
+  let talkgroups = [];
   let assignments = [];
   let dispatchRecord = null;
 
@@ -184,15 +185,23 @@
     select.disabled = false;
   }
 
-  function fillSelect(select, records, valueField, labelFactory, emptyLabel) {
+  function fillSelect(
+    select,
+    records,
+    valueField,
+    labelFactory,
+    emptyLabel,
+    sortByLabel = true
+  ) {
     select.replaceChildren(new Option(emptyLabel, ""));
-    records
-      .map((feature) => ({
-        value: feature.attributes[valueField],
-        label: labelFactory(feature.attributes)
-      }))
-      .sort((a, b) => a.label.localeCompare(b.label, "de"))
-      .forEach((item) => select.add(new Option(item.label, item.value)));
+    const options = records.map((feature) => ({
+      value: feature.attributes[valueField],
+      label: labelFactory(feature.attributes)
+    }));
+    if (sortByLabel) {
+      options.sort((a, b) => a.label.localeCompare(b.label, "de"));
+    }
+    options.forEach((item) => select.add(new Option(item.label, item.value)));
     select.disabled = false;
   }
 
@@ -561,7 +570,7 @@
   }
 
   async function initializeDispatchTool() {
-    [abekRecords] = await Promise.all([
+    [abekRecords, , talkgroups] = await Promise.all([
       queryLayer(
         config.layers.abekCatalog,
         "is_active = 1",
@@ -572,8 +581,20 @@
         config.layers.scenarioDispatch,
         "incident_type",
         "Einsatzart auswählen"
+      ),
+      queryLayer(
+        config.layers.talkgroups,
+        "is_active = 1",
+        config.talkgroupServiceUrl
       )
     ]);
+
+    talkgroups.sort((a, b) => {
+      const orderA = a.attributes.display_order ?? Number.MAX_SAFE_INTEGER;
+      const orderB = b.attributes.display_order ?? Number.MAX_SAFE_INTEGER;
+      return orderA - orderB || String(a.attributes.talkgroup_name)
+        .localeCompare(String(b.attributes.talkgroup_name), "de");
+    });
 
     fillSelect(
       byId("abekSelect"),
@@ -583,9 +604,27 @@
       "ABEK-Einsatzstichwort auswählen"
     );
 
+    fillSelect(
+      byId("talkgroupName"),
+      talkgroups,
+      "talkgroup_name",
+      (attributes) => combinedLabel(attributes, ["talkgroup_name", "display_name"]),
+      "Sprechgruppe auswählen",
+      false
+    );
+
     scenarioSelect.addEventListener("change", loadDispatchRecord);
+    byId("talkgroupName").addEventListener("change", updateShortDial);
     saveButton.addEventListener("click", saveDispatchRecord);
     await loadDispatchRecord();
+  }
+
+  function updateShortDial() {
+    const selectedName = byId("talkgroupName").value;
+    const talkgroup = talkgroups.find(
+      (feature) => feature.attributes.talkgroup_name === selectedName
+    );
+    byId("talkgroupShortDial").value = talkgroup?.attributes.short_dial || "";
   }
 
   async function loadDispatchRecord() {
