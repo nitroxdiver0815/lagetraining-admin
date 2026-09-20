@@ -533,12 +533,11 @@
   }
 
   function abekLabel(attributes) {
-    return combinedLabel(attributes, [
-      "einsatzbereich",
-      "stichwort",
-      "schlagwort",
-      "kategorie"
-    ]);
+    const values = ["stichwort", "kategorie", "schlagwort"]
+      .map((field) => attributes[field])
+      .filter((value) => value !== null && value !== undefined && String(value).trim())
+      .map((value) => String(value).trim());
+    return values.join(" - ") || "Unbenannter ABEK-Datensatz";
   }
 
   async function initializeDispatchTool() {
