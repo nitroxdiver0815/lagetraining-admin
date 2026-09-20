@@ -576,9 +576,11 @@
 
     const attributes = dispatchRecord.attributes;
     const storedAbekId = normalizeGuid(attributes.initial_abek_id);
-    const abekOption = Array.from(byId("abekSelect").options).find(
-      (option) => normalizeGuid(option.value) === storedAbekId
-    );
+    const abekOption = storedAbekId
+      ? Array.from(byId("abekSelect").options).find(
+          (option) => option.value && normalizeGuid(option.value) === storedAbekId
+        )
+      : null;
 
     byId("abekSelect").value = abekOption?.value || "";
     byId("incidentType").value = attributes.incident_type || "";
@@ -590,7 +592,8 @@
       setStatus("Vorhandene Alarmierungsdaten wurden geladen.", "success");
     } else {
       setStatus(
-        `Alarmierungsdaten geladen, aber ABEK-GUID ${attributes.initial_abek_id} ` +
+        `Alarmierungsdaten geladen, aber ABEK-GUID ` +
+          `${attributes.initial_abek_id ?? "(leer/nicht geliefert)"} ` +
           `wurde in ${abekRecords.length} aktiven ABEK-Datensätzen nicht gefunden.`,
         "error"
       );
