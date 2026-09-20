@@ -49,7 +49,7 @@ Schreibt und löscht Zuordnungen in `scenario_locations`:
 
 ### AAO / Alarmierung
 
-Erstellt oder aktualisiert den Datensatz in `scenario_dispatch` und verbindet ihn über `initial_abek_id` mit dem separaten `abek_catalog`.
+Erstellt oder aktualisiert den Datensatz in `scenario_dispatch` und verbindet ihn über `initial_abek_id` mit der `GlobalID` des Datensatzes im separaten `abek_catalog`. In der Auswahlliste erscheinen nur Datensätze mit `is_active = 1`.
 
 ### Fahrzeuge
 
