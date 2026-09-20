@@ -62,6 +62,20 @@
       `initial_abek_id=${attributes.initial_abek_id})`;
   }
 
+  function requestErrorMessage(prefix, error, attributes) {
+    const details = [
+      error?.message,
+      error?.details?.message,
+      error?.details?.raw?.message,
+      ...(Array.isArray(error?.details?.raw?.details)
+        ? error.details.raw.details
+        : [])
+    ].filter(Boolean).join(" | ") || "Unbekannter Anfragefehler";
+    return `${prefix}: ${details} ` +
+      `(scenario_id=${attributes.scenario_id}, ` +
+      `initial_abek_id=${attributes.initial_abek_id})`;
+  }
+
   function sqlLiteral(value) {
     if (typeof value === "number") return String(value);
     return `'${String(value).replace(/'/g, "''")}'`;
@@ -581,30 +595,40 @@
     };
 
     let result;
-    if (dispatchRecord) {
-      attributes[config.fields.objectId] =
-        dispatchRecord.attributes[config.fields.objectId];
-      result = await applyEdits(config.layers.scenarioDispatch, {
-        updates: JSON.stringify([{ attributes }])
-      });
-      if (!result.updateResults?.[0]?.success) {
-        throw new Error(editErrorMessage(
-          "Aktualisieren fehlgeschlagen",
-          result.updateResults?.[0]?.error,
-          attributes
-        ));
+    try {
+      if (dispatchRecord) {
+        attributes[config.fields.objectId] =
+          dispatchRecord.attributes[config.fields.objectId];
+        result = await applyEdits(config.layers.scenarioDispatch, {
+          updates: JSON.stringify([{ attributes }])
+        });
+        if (!result.updateResults?.[0]?.success) {
+          throw new Error(editErrorMessage(
+            "Aktualisieren fehlgeschlagen",
+            result.updateResults?.[0]?.error,
+            attributes
+          ));
+        }
+      } else {
+        result = await applyEdits(config.layers.scenarioDispatch, {
+          adds: JSON.stringify([{ attributes }])
+        });
+        if (!result.addResults?.[0]?.success) {
+          throw new Error(editErrorMessage(
+            "Anlegen fehlgeschlagen",
+            result.addResults?.[0]?.error,
+            attributes
+          ));
+        }
       }
-    } else {
-      result = await applyEdits(config.layers.scenarioDispatch, {
-        adds: JSON.stringify([{ attributes }])
-      });
-      if (!result.addResults?.[0]?.success) {
-        throw new Error(editErrorMessage(
-          "Anlegen fehlgeschlagen",
-          result.addResults?.[0]?.error,
-          attributes
-        ));
-      }
+    } catch (error) {
+      const message = error.message?.startsWith("Anlegen fehlgeschlagen") ||
+        error.message?.startsWith("Aktualisieren fehlgeschlagen")
+        ? error.message
+        : requestErrorMessage("ArcGIS-Anfrage fehlgeschlagen", error, attributes);
+      setStatus(message, "error");
+      saveButton.disabled = false;
+      return;
     }
 
     setStatus("Alarmierungsdaten wurden gespeichert.", "success");
