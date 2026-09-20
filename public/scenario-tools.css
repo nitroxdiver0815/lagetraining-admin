@@ -74,6 +74,12 @@ input, select, textarea {
   background: #fff;
 }
 
+#talkgroupShortDial {
+  color: #5f6872;
+  pointer-events: none;
+  user-select: none;
+}
+
 textarea {
   min-height: 78px;
   resize: vertical;
