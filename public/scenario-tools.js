@@ -100,22 +100,41 @@
   }
 
   async function queryLayer(layerId, where = "1=1", serviceUrl) {
-    const response = await arcgisRequest(
-      `${serviceLayerUrl(layerId, serviceUrl)}/query`,
-      {
-        method: "post",
-        query: {
-          f: "json",
-          token: credential.token,
-          where,
-          outFields: "*",
-          returnGeometry: false,
-          orderByFields: "OBJECTID"
-        },
-        responseType: "json"
+    const features = [];
+    const pageSize = 2000;
+    let resultOffset = 0;
+    let exceededTransferLimit;
+
+    do {
+      const response = await arcgisRequest(
+        `${serviceLayerUrl(layerId, serviceUrl)}/query`,
+        {
+          method: "post",
+          query: {
+            f: "json",
+            token: credential.token,
+            where,
+            outFields: "*",
+            returnGeometry: false,
+            orderByFields: "OBJECTID",
+            resultOffset,
+            resultRecordCount: pageSize
+          },
+          responseType: "json"
+        }
+      );
+
+      const page = response.data.features || [];
+      features.push(...page);
+      resultOffset += page.length;
+      exceededTransferLimit = response.data.exceededTransferLimit === true;
+
+      if (exceededTransferLimit && page.length === 0) {
+        throw new Error("ArcGIS meldet weitere Datensätze, liefert aber keine Folgeseite.");
       }
-    );
-    return response.data.features || [];
+    } while (exceededTransferLimit);
+
+    return features;
   }
 
   async function applyEdits(layerId, edits) {
