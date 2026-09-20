@@ -575,15 +575,26 @@
     }
 
     const attributes = dispatchRecord.attributes;
-    const abekFeature = featureByGuid(abekRecords, "GlobalID", attributes.initial_abek_id);
+    const storedAbekId = normalizeGuid(attributes.initial_abek_id);
+    const abekOption = Array.from(byId("abekSelect").options).find(
+      (option) => normalizeGuid(option.value) === storedAbekId
+    );
 
-    byId("abekSelect").value = abekFeature?.attributes.GlobalID || "";
+    byId("abekSelect").value = abekOption?.value || "";
     byId("incidentType").value = attributes.incident_type || "";
     byId("talkgroupName").value = attributes.talkgroup_name || "";
     byId("talkgroupShortDial").value = attributes.talkgroup_short_dial || "";
     byId("incidentInformation").value = attributes.incident_information || "";
     byId("dispatchFreeText").value = attributes.dispatch_free_text || "";
-    setStatus("Vorhandene Alarmierungsdaten wurden geladen.", "success");
+    if (abekOption) {
+      setStatus("Vorhandene Alarmierungsdaten wurden geladen.", "success");
+    } else {
+      setStatus(
+        `Alarmierungsdaten geladen, aber ABEK-GUID ${attributes.initial_abek_id} ` +
+          `wurde in ${abekRecords.length} aktiven ABEK-Datensätzen nicht gefunden.`,
+        "error"
+      );
+    }
   }
 
   async function saveDispatchRecord() {
