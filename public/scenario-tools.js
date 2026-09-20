@@ -43,6 +43,10 @@
     return `'{${normalizeGuid(value)}}'`;
   }
 
+  function arcgisGuid(value) {
+    return `{${normalizeGuid(value)}}`;
+  }
+
   function sqlLiteral(value) {
     if (typeof value === "number") return String(value);
     return `'${String(value).replace(/'/g, "''")}'`;
@@ -553,7 +557,7 @@
 
     const attributes = {
       scenario_id: scenarioId,
-      initial_abek_id: abekId,
+      initial_abek_id: arcgisGuid(abekId),
       incident_type: incidentType,
       talkgroup_name: talkgroupName,
       talkgroup_short_dial: byId("talkgroupShortDial").value.trim() || null,
