@@ -91,6 +91,16 @@
     return fallback;
   }
 
+  function attributeValue(attributes, fieldName) {
+    if (Object.prototype.hasOwnProperty.call(attributes, fieldName)) {
+      return attributes[fieldName];
+    }
+    const matchingKey = Object.keys(attributes).find(
+      (key) => key.toLowerCase() === fieldName.toLowerCase()
+    );
+    return matchingKey ? attributes[matchingKey] : undefined;
+  }
+
   function combinedLabel(attributes, fields) {
     const values = fields
       .map((field) => attributes[field])
@@ -575,7 +585,8 @@
     }
 
     const attributes = dispatchRecord.attributes;
-    const storedAbekId = normalizeGuid(attributes.initial_abek_id);
+    const initialAbekId = attributeValue(attributes, "initial_abek_id");
+    const storedAbekId = normalizeGuid(initialAbekId);
     const abekOption = storedAbekId
       ? Array.from(byId("abekSelect").options).find(
           (option) => option.value && normalizeGuid(option.value) === storedAbekId
@@ -593,8 +604,9 @@
     } else {
       setStatus(
         `Alarmierungsdaten geladen, aber ABEK-GUID ` +
-          `${attributes.initial_abek_id ?? "(leer/nicht geliefert)"} ` +
-          `wurde in ${abekRecords.length} aktiven ABEK-Datensätzen nicht gefunden.`,
+          `${initialAbekId ?? "(leer/nicht geliefert)"} ` +
+          `wurde in ${abekRecords.length} aktiven ABEK-Datensätzen nicht gefunden. ` +
+          `Gelieferte Felder: ${Object.keys(attributes).join(", ")}.`,
         "error"
       );
     }
