@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="de" data-tool="vehicles">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Szenario – Fahrzeuge</title>
+  <link rel="stylesheet" href="https://js.arcgis.com/4.33/esri/themes/light/main.css">
+  <link rel="stylesheet" href="scenario-tools.css">
+  <script src="https://js.arcgis.com/4.33/"></script>
+  <script src="config.js"></script>
+  <script defer src="scenario-tools.js"></script>
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <div><p class="eyebrow">Szenarioverwaltung</p><h1>Fahrzeuge zuordnen</h1></div>
+      <button id="signInButton" class="secondary" type="button">Bei ArcGIS anmelden</button>
+    </header>
+
+    <section class="card">
+      <label>Szenario
+        <select id="scenarioSelect" disabled><option>Bitte anmelden</option></select>
+      </label>
+    </section>
+
+    <section class="card">
+      <h2>Neue Fahrzeugzuordnung</h2>
+      <div class="form-grid">
+        <label>Fahrzeug
+          <select id="vehicleSelect" disabled></select>
+        </label>
+        <label>Startwache
+          <select id="startLocationSelect" disabled></select>
+        </label>
+        <label>Besatzung
+          <input id="crewConfiguration" type="text" maxlength="10" placeholder="z. B. 1/5">
+        </label>
+        <label>Alarmierungsreihenfolge
+          <input id="dispatchOrder" type="number" min="0" step="1">
+        </label>
+        <label>Primäres Fahrzeug
+          <select id="vehiclePrimary"><option value="0">Nein</option><option value="1">Ja</option></select>
+        </label>
+        <label class="wide">Hinweise
+          <textarea id="vehicleNotes" maxlength="500"></textarea>
+        </label>
+      </div>
+      <div class="actions"><button id="saveButton" disabled>Fahrzeug zuordnen</button></div>
+      <p id="status" class="status" role="status"></p>
+    </section>
+
+    <section class="card">
+      <h2>Zugeordnete Fahrzeuge</h2>
+      <div id="assignmentList" class="assignment-list"></div>
+    </section>
+  </main>
+</body>
+</html>
