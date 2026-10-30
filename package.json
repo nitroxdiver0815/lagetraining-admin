@@ -2,10 +2,11 @@
   "name": "lagetraining-admin",
   "version": "0.1.0",
   "private": true,
-  "description": "Verwaltungsmodul für das virtuelle Lagetraining",
+  "description": "Verwaltungsmodul f\u00fcr das virtuelle Lagetraining",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "node --test tests/*.test.cjs"
   },
   "engines": {
     "node": ">=18"

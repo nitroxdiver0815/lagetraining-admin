@@ -1,12 +1,10 @@
 "use strict";
 
-const path = require("path");
 const express = require("express");
 
 const app = express();
 const port = Number.parseInt(process.env.PORT || "3002", 10);
-const host = process.env.HOST || "0.0.0.0";
-const publicDirectory = path.join(__dirname, "public");
+const host = process.env.HOST || "127.0.0.1";
 const frameAncestors =
   process.env.FRAME_ANCESTORS ||
   "'self' https://experience.arcgis.com https://*.arcgis.com";
@@ -32,15 +30,21 @@ app.get("/health", (_request, response) => {
   });
 });
 
-app.use(express.static(publicDirectory, {
-  index: "index.html",
-  extensions: ["html"]
-}));
-
+// The former standalone editor bypassed central membership checks. All business
+// pages now enter the central authenticated administration.
 app.use((_request, response) => {
-  response.status(404).json({ error: "Not found" });
+  const target=process.env.LAGETRAINING_PUBLIC_URL;
+  if(!target) return response.status(503).send("Adresse der Lagetraining-Zentrale fehlt.");
+  let origin;
+  try { origin=new URL(target); } catch { return response.status(503).end(); }
+  if(origin.protocol!=="https:" || origin.username || origin.password || origin.pathname!=="/" || origin.search || origin.hash)
+    return response.status(503).end();
+  response.setHeader("Cache-Control","no-store");
+  response.redirect(302,origin.origin+"/verwaltung.html");
 });
 
-app.listen(port, host, () => {
+if (require.main === module) app.listen(port, host, () => {
   console.log(`Lagetraining Admin läuft auf http://${host}:${port}/`);
 });
+
+module.exports=app;

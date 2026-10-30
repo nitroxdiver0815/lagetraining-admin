@@ -94,3 +94,7 @@ Die Anwendung enthält keine ArcGIS-Zugangsdaten. Sie verwendet ArcGIS OAuth und
 ## Einbettung
 
 Der Server erlaubt Frames von `experience.arcgis.com` und `*.arcgis.com`. Für den Betrieb in Experience Builder ist eine öffentlich erreichbare HTTPS-Adresse erforderlich.
+
+## Version 0.73
+
+Die bisherige eigenständige Pflegeoberfläche leitet über `LAGETRAINING_PUBLIC_URL` nach `/verwaltung.html` der Zentrale um. Dort werden Mandantenmitgliedschaft und fachliche Berechtigung serverseitig geprüft. Die alten statischen Pflegemasken werden nicht mehr ausgeliefert. Ohne konfigurierte HTTPS-Zentrale antwortet der Dienst mit 503.
